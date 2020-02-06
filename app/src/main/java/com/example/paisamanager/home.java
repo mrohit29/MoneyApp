@@ -19,7 +19,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class home extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
-    private ArrayList<Users> lis = new ArrayList<>();
+    private ArrayList<Users> lis ;
     private TextView date;
 
 
@@ -27,9 +27,10 @@ public class home extends AppCompatActivity implements DatePickerDialog.OnDateSe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-//        lis = FileHelper.readData(this);
+        lis = FileHelper.readData(this);
         final TextView name = (TextView) findViewById(R.id.name);
         final TextView amount = (TextView) findViewById(R.id.amount);
+        final TextView desc = (TextView) findViewById(R.id.desc);
         date = (TextView) findViewById(R.id.textView);
         date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,7 +44,16 @@ public class home extends AppCompatActivity implements DatePickerDialog.OnDateSe
             @Override
             public void onClick(View v) {
                 try {
-                    saveNew(name.getText().toString(), amount.getText().toString());
+                    if (name.getText().toString().isEmpty())
+                        name.setError("Please Enter Name");
+                    else if (amount.getText().toString().isEmpty())
+                        amount.setError("Please Enter Amount");
+                    else if (date.getText().equals("DD/MMM/YYYY"))
+                        date.setError("Please Enter Date");
+                    else if (desc.getText().toString().isEmpty())
+                        desc.setError("Please Fill description");
+                    else
+                        saveNew(name.getText().toString(), amount.getText().toString(), desc.getText().toString());
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -58,17 +68,19 @@ public class home extends AppCompatActivity implements DatePickerDialog.OnDateSe
         });
     }
 
-    private void saveNew(String name, String amount) throws ParseException {
+    private void saveNew(String name, String amount, String desc) throws ParseException {
         Users users = new Users();
         users.setName(name);
         users.setAmount(Integer.parseInt(amount));
         Date newDate = new SimpleDateFormat("d/MMM/yyyy").parse(date.getText().toString());
         users.setTransDate(newDate);
+        users.setStatus(Boolean.FALSE);
         users.setUpdatedat(LocalDateTime.now());
+        users.setDescription("Description : " + desc);
         lis.add(users);
         Toast toast = Toast.makeText(this, "New Transaction Added Succefully", Toast.LENGTH_LONG);
         toast.show();
-//        FileHelper.writeData(lis,this );
+        FileHelper.writeData(lis,this );
 
     }
 

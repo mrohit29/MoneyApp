@@ -9,6 +9,18 @@ import java.util.Date;
 public class Users implements Serializable {
     private String name;
     private Integer amount;
+    private Boolean credit;
+    private Date transDate;
+    private Boolean status;
+    private String description;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public Boolean getStatus() {
         return status;
@@ -17,10 +29,6 @@ public class Users implements Serializable {
     public void setStatus(Boolean status) {
         this.status = status;
     }
-
-    private Boolean credit;
-    private Date transDate;
-    private Boolean status;
 
     public Date getTransDate() {
         return transDate;
